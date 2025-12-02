@@ -1,0 +1,101 @@
+mod d1;
+mod d10;
+mod d11;
+mod d12;
+mod d2;
+mod d3;
+mod d4;
+mod d5;
+mod d6;
+mod d7;
+mod d8;
+mod d9;
+
+use std::{
+    env,
+    fmt::Display,
+    fs::File,
+    io::{BufRead, BufReader},
+};
+
+trait Input {
+    fn lines(&self) -> impl Iterator<Item = Box<str>>;
+    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>> {
+        self.lines()
+            .map(|l| {
+                l.split(*delimeter)
+                    .map(|e| String::into_boxed_str(e.to_owned()))
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+    }
+}
+
+struct FileInput<'a>(&'a str);
+impl<'a> Input for FileInput<'a> {
+    fn lines(&self) -> impl Iterator<Item = Box<str>> {
+        BufReader::new(File::open(self.0).expect("Could not open input file"))
+            .lines()
+            .map(|l| l.unwrap())
+            .map(String::into_boxed_str)
+    }
+}
+
+trait Solution<T: Display> {
+    fn solution(input: impl Input) -> T;
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 3 {
+        eprintln!("Usage: {} <day> <part> <input_file>", args[0]);
+        return;
+    }
+
+    let day = args[1]
+        .parse::<u8>()
+        .expect("Invalid day, please choose day in range 1-12");
+    if day < 1 || day > 12 {
+        panic!("Invalid day, please choose day in range 1-12");
+    }
+
+    let is_first_part = if args[2] == "1" {
+        true
+    } else if args[2] == "2" {
+        false
+    } else {
+        panic!("Invalid part, choose either part 1 or 2")
+    };
+
+    let file_input = FileInput(&args[3]);
+    let result = match (day, is_first_part) {
+        (1, true) => format!("{}", d1::D1P1::solution(file_input)),
+        (1, false) => format!("{}", d1::D1P2::solution(file_input)),
+        (2, true) => format!("{}", d2::D2P1::solution(file_input)),
+        (2, false) => format!("{}", d2::D2P2::solution(file_input)),
+        (3, true) => format!("{}", d3::D3P1::solution(file_input)),
+        (3, false) => format!("{}", d3::D3P2::solution(file_input)),
+        (4, true) => format!("{}", d4::D4P1::solution(file_input)),
+        (4, false) => format!("{}", d4::D4P2::solution(file_input)),
+        (5, true) => format!("{}", d5::D5P1::solution(file_input)),
+        (5, false) => format!("{}", d5::D5P2::solution(file_input)),
+        (6, true) => format!("{}", d6::D6P1::solution(file_input)),
+        (6, false) => format!("{}", d6::D6P2::solution(file_input)),
+        (7, true) => format!("{}", d7::D7P1::solution(file_input)),
+        (7, false) => format!("{}", d7::D7P2::solution(file_input)),
+        (8, true) => format!("{}", d8::D8P1::solution(file_input)),
+        (8, false) => format!("{}", d8::D8P2::solution(file_input)),
+        (9, true) => format!("{}", d9::D9P1::solution(file_input)),
+        (9, false) => format!("{}", d9::D9P2::solution(file_input)),
+        (10, true) => format!("{}", d10::D10P1::solution(file_input)),
+        (10, false) => format!("{}", d10::D10P2::solution(file_input)),
+        (11, true) => format!("{}", d11::D11P1::solution(file_input)),
+        (11, false) => format!("{}", d11::D11P2::solution(file_input)),
+        (12, true) => format!("{}", d12::D12P1::solution(file_input)),
+        _ => unreachable!(),
+    };
+
+    println!("Result -----------------------------------------------");
+    println!("{result}");
+    println!("------------------------------------------------------");
+}
