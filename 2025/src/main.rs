@@ -7,8 +7,6 @@ use std::{
     io::{BufRead, BufReader},
 };
 
-use crate::d1::Day1;
-
 trait Input {
     fn lines(&self) -> impl Iterator<Item = Box<str>>;
 }
@@ -30,7 +28,7 @@ trait Solution<T: Display> {
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
-        eprintln!("Usage: {} <day> <input_file>", args[0]);
+        eprintln!("Usage: {} <day> <part> <input_file>", args[0]);
         return;
     }
 
@@ -41,10 +39,19 @@ fn main() {
         panic!("Invalid day, please choose day in range 1-12");
     }
 
-    let file_input = FileInput(&args[2]);
-    let result = match day {
-        1 => Day1::solution(file_input),
-        _ => panic!("Invalid day, please choose day in range 1-12"),
+    let is_first_part = if args[2] == "1" {
+        true
+    } else if args[2] == "2" {
+        false
+    } else {
+        panic!("Invalid part, choose either part 1 or 2")
+    };
+
+    let file_input = FileInput(&args[3]);
+    let result = match (day, is_first_part) {
+        (1, true) => d1::D1P1::solution(file_input),
+        (1, false) => d1::D1P2::solution(file_input),
+        _ => unreachable!(),
     };
 
     println!("Result -----------------------------------------------");
