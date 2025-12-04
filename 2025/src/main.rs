@@ -1,4 +1,5 @@
 mod d1;
+mod d2;
 
 use std::{
     env,
@@ -9,6 +10,7 @@ use std::{
 
 trait Input {
     fn lines(&self) -> impl Iterator<Item = Box<str>>;
+    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>>;
 }
 
 struct FileInput<'a>(&'a str);
@@ -18,6 +20,18 @@ impl<'a> Input for FileInput<'a> {
             .lines()
             .map(|l| l.unwrap())
             .map(String::into_boxed_str)
+    }
+
+    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>> {
+        BufReader::new(File::open(self.0).expect("Could not open input file"))
+            .lines()
+            .map(|l| {
+                l.unwrap()
+                    .split(*delimeter)
+                    .map(|e| String::into_boxed_str(e.to_owned()))
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
     }
 }
 
@@ -51,6 +65,7 @@ fn main() {
     let result = match (day, is_first_part) {
         (1, true) => d1::D1P1::solution(file_input),
         (1, false) => d1::D1P2::solution(file_input),
+        (2, true) => d2::D2P1::solution(file_input),
         _ => unreachable!(),
     };
 
@@ -61,14 +76,14 @@ fn main() {
 
 #[cfg(test)]
 pub struct TestInput {
-    lines: Vec<Box<str>>,
+    elements: Vec<Box<str>>,
 }
 
 #[cfg(test)]
 impl TestInput {
-    pub fn new(lines: Vec<&str>) -> Self {
+    pub fn new(elements: Vec<&str>) -> Self {
         TestInput {
-            lines: lines
+            elements: elements
                 .into_iter()
                 .map(String::from)
                 .map(String::into_boxed_str)
@@ -80,6 +95,9 @@ impl TestInput {
 #[cfg(test)]
 impl Input for TestInput {
     fn lines(&self) -> impl Iterator<Item = Box<str>> {
-        self.lines.clone().into_iter()
+        self.elements.clone().into_iter()
+    }
+    fn split_delimeter(&self, _: &'static char) -> impl Iterator<Item = Box<str>> {
+        self.elements.clone().into_iter()
     }
 }
