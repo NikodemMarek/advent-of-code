@@ -66,6 +66,7 @@ fn main() {
         (1, true) => d1::D1P1::solution(file_input),
         (1, false) => d1::D1P2::solution(file_input),
         (2, true) => d2::D2P1::solution(file_input),
+        (2, false) => d2::D2P2::solution(file_input),
         _ => unreachable!(),
     };
 
