@@ -11,7 +11,20 @@ use std::{
 
 trait Input {
     fn lines(&self) -> impl Iterator<Item = Box<str>>;
-    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>>;
+    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>> {
+        self.lines()
+            .map(|l| {
+                l.split(*delimeter)
+                    .map(|e| String::into_boxed_str(e.to_owned()))
+                    .collect::<Vec<_>>()
+            })
+            .flatten()
+    }
+    fn chars(&self) -> impl Iterator<Item = char> {
+        self.lines()
+            .map(|l| l.chars().collect::<Vec<_>>().into_iter())
+            .flatten()
+    }
 }
 
 struct FileInput<'a>(&'a str);
@@ -21,18 +34,6 @@ impl<'a> Input for FileInput<'a> {
             .lines()
             .map(|l| l.unwrap())
             .map(String::into_boxed_str)
-    }
-
-    fn split_delimeter(&self, delimeter: &'static char) -> impl Iterator<Item = Box<str>> {
-        BufReader::new(File::open(self.0).expect("Could not open input file"))
-            .lines()
-            .map(|l| {
-                l.unwrap()
-                    .split(*delimeter)
-                    .map(|e| String::into_boxed_str(e.to_owned()))
-                    .collect::<Vec<_>>()
-            })
-            .flatten()
     }
 }
 
@@ -70,6 +71,8 @@ fn main() {
         (2, false) => format!("{}", d2::D2P2::solution(file_input)),
         (3, true) => format!("{}", d3::D3P1::solution(file_input)),
         (3, false) => format!("{}", d3::D3P2::solution(file_input)),
+        (4, true) => format!("{}", d4::D4P1::solution(file_input)),
+        (4, false) => format!("{}", d4::D4P2::solution(file_input)),
         _ => unreachable!(),
     };
 
@@ -101,8 +104,4 @@ impl Input for TestInput {
     fn lines(&self) -> impl Iterator<Item = Box<str>> {
         self.elements.clone().into_iter()
     }
-    fn split_delimeter(&self, _: &'static char) -> impl Iterator<Item = Box<str>> {
-        self.elements.clone().into_iter()
-    }
 }
-
