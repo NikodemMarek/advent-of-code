@@ -2,6 +2,7 @@ mod d1;
 mod d2;
 mod d3;
 mod d4;
+mod d5;
 
 use std::{
     env,
@@ -74,6 +75,8 @@ fn main() {
         (3, false) => format!("{}", d3::D3P2::solution(file_input)),
         (4, true) => format!("{}", d4::D4P1::solution(file_input)),
         (4, false) => format!("{}", d4::D4P2::solution(file_input)),
+        (5, true) => format!("{}", d5::D5P1::solution(file_input)),
+        (5, false) => format!("{}", d5::D5P2::solution(file_input)),
         _ => unreachable!(),
     };
 

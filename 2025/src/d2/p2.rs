@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use crate::{Input, Solution};
+use std::collections::HashSet;
 
 fn get_ranges(input: impl Input) -> Vec<(usize, usize)> {
     let mut ranges = input
@@ -13,7 +13,7 @@ fn get_ranges(input: impl Input) -> Vec<(usize, usize)> {
         })
         .collect::<Vec<_>>();
     ranges.sort();
-    return ranges;
+    ranges
 }
 
 const PRIMES: [u32; 8] = [2, 3, 5, 7, 11, 13, 17, 19];
@@ -44,9 +44,7 @@ fn sum_doubles(ranges: &[(usize, usize)]) -> usize {
     loop {
         for num in all_nums(digits) {
             if num > maxh {
-                return nums.iter()
-                    .filter(|n| is_in_ranges(**n, ranges))
-                    .sum();
+                return nums.iter().filter(|n| is_in_ranges(**n, ranges)).sum();
             }
 
             for prime in PRIMES {
@@ -92,9 +90,9 @@ impl Solution<usize> for D2P2 {
 
 #[cfg(test)]
 pub mod tests {
-use super::{repeat, is_in_ranges, D2P2};
+    use super::{D2P2, is_in_ranges, repeat};
     use crate::{Solution, TestInput};
-    
+
     #[test]
     fn extends_correctly() {
         assert_eq!(repeat(1, 1, 1), Some(1));
