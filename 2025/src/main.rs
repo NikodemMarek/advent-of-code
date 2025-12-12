@@ -1,10 +1,15 @@
 mod d1;
+mod d10;
+mod d11;
+mod d12;
 mod d2;
 mod d3;
 mod d4;
 mod d5;
 mod d6;
 mod d7;
+mod d8;
+mod d9;
 
 use std::{
     env,
@@ -83,6 +88,16 @@ fn main() {
         (6, false) => format!("{}", d6::D6P2::solution(file_input)),
         (7, true) => format!("{}", d7::D7P1::solution(file_input)),
         (7, false) => format!("{}", d7::D7P2::solution(file_input)),
+        (8, true) => format!("{}", d8::D8P1::solution(file_input)),
+        (8, false) => format!("{}", d8::D8P2::solution(file_input)),
+        (9, true) => format!("{}", d9::D9P1::solution(file_input)),
+        (9, false) => format!("{}", d9::D9P2::solution(file_input)),
+        (10, true) => format!("{}", d10::D10P1::solution(file_input)),
+        (10, false) => format!("{}", d10::D10P2::solution(file_input)),
+        (11, true) => format!("{}", d11::D11P1::solution(file_input)),
+        (11, false) => format!("{}", d11::D11P2::solution(file_input)),
+        (12, true) => format!("{}", d12::D12P1::solution(file_input)),
+        (12, false) => format!("{}", d12::D12P2::solution(file_input)),
         _ => unreachable!(),
     };
 
